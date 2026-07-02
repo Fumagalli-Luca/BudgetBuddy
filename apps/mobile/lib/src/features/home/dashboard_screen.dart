@@ -52,7 +52,7 @@ class DashboardScreen extends ConsumerWidget {
                 Text(
                   'Saldo manuale disponibile',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: scheme.onPrimary.withOpacity(0.82),
+                        color: scheme.onPrimary.withValues(alpha: 0.82),
                       ),
                 ),
                 const SizedBox(height: 6),
@@ -68,14 +68,14 @@ class DashboardScreen extends ConsumerWidget {
                   value: (state.monthlyExpenses / state.onboarding.monthlyBudget)
                       .clamp(0, 1)
                       .toDouble(),
-                  backgroundColor: scheme.onPrimary.withOpacity(0.2),
+                  backgroundColor: scheme.onPrimary.withValues(alpha: 0.2),
                   valueColor: AlwaysStoppedAnimation<Color>(scheme.secondary),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   '${euro(state.monthlyExpenses)} spesi su ${euro(state.onboarding.monthlyBudget)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: scheme.onPrimary.withOpacity(0.86),
+                        color: scheme.onPrimary.withValues(alpha: 0.86),
                       ),
                 ),
               ],

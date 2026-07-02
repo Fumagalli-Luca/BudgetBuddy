@@ -80,7 +80,8 @@ class _ExpenseListScreenState extends ConsumerState<ExpenseListScreen> {
               return Card(
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Color(category.colorHex).withOpacity(0.16),
+                    backgroundColor:
+                        Color(category.colorHex).withValues(alpha: 0.16),
                     child: Text(category.emoji),
                   ),
                   title: Text(expense.description),

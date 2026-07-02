@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 void main() {
   testWidgets('renders BudgetBuddy Social shell', (tester) async {
     await tester.pumpWidget(const ProviderScope(child: BudgetBuddyApp()));
+    await tester.pump(const Duration(milliseconds: 800));
+    await tester.pumpAndSettle();
+
     expect(find.text('BudgetBuddy Social'), findsOneWidget);
   });
 }

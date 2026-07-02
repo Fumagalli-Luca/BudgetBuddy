@@ -11,7 +11,7 @@ class DisclaimerBanner extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: scheme.secondaryContainer.withOpacity(0.72),
+        color: scheme.secondaryContainer.withValues(alpha: 0.72),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
