@@ -1,0 +1,10 @@
+{
+  "name": "BudgetBuddy Admin",
+  "short_name": "BB Admin",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFBFF",
+  "theme_color": "#6C4DFF",
+  "description": "Admin panel for BudgetBuddy Social.",
+  "orientation": "any"
+}

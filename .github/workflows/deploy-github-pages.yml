@@ -1,0 +1,76 @@
+name: Deploy Admin to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - apps/admin/**
+      - packages/budgetbuddy_shared/**
+      - .github/workflows/deploy-github-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+env:
+  FLUTTER_APP_DIR: apps/admin
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Resolve GitHub Pages base href
+        id: pages_base
+        shell: bash
+        run: |
+          repo_name="${GITHUB_REPOSITORY#*/}"
+          if [[ "$repo_name" == *.github.io ]]; then
+            echo "base_href=/" >> "$GITHUB_OUTPUT"
+          else
+            echo "base_href=/$repo_name/" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install dependencies
+        working-directory: ${{ env.FLUTTER_APP_DIR }}
+        run: flutter pub get
+
+      - name: Build web
+        working-directory: ${{ env.FLUTTER_APP_DIR }}
+        run: flutter build web --release --base-href "${{ steps.pages_base.outputs.base_href }}"
+
+      - name: Disable Jekyll
+        run: touch "${{ env.FLUTTER_APP_DIR }}/build/web/.nojekyll"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.FLUTTER_APP_DIR }}/build/web
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

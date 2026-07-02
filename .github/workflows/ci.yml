@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Shared package
+        working-directory: packages/budgetbuddy_shared
+        run: |
+          dart pub get
+          dart analyze
+          dart test
+
+      - name: Mobile app
+        working-directory: apps/mobile
+        run: |
+          flutter pub get
+          flutter analyze
+          flutter test
+
+      - name: Admin panel
+        working-directory: apps/admin
+        run: |
+          flutter pub get
+          flutter analyze
+          flutter test
+
+  supabase-functions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v1.x
+      - name: Check Edge Functions
+        run: |
+          deno check supabase/functions/recalculate_monthly_stats/index.ts
+          deno check supabase/functions/check_goal_milestones/index.ts
+          deno check supabase/functions/complete_challenge_award_badge/index.ts
+          deno check supabase/functions/weekly_summary_mock/index.ts
+          deno check supabase/functions/delete_user_account/index.ts
